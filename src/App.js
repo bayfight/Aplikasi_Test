@@ -1,26 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Row, Col, Button } from 'reactstrap';
+import FormMain from './component/FormMain';
+import ListNotes from './component/ListNotes';
 import './App.css';
+import Sidebar from './component/Sidebar';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    filteredLabels: [],
+  }
+  addFilteredLabel = (labelId) => {
+    let { filteredLabels } = this.state;
+    if (!filteredLabels.find(label => label === labelId)) {
+      filteredLabels = [
+        ...filteredLabels,
+        labelId,
+      ];
+    } else {
+      filteredLabels = filteredLabels.filter(label => label !== labelId);
+    }
+    this.setState({ filteredLabels });
+  }
+  render() {
+    const {
+      filteredLabels,
+    } = this.state;
+    return (
+      <div className="container">
+        <Row>
+          <Col xs={3}>
+            <Sidebar addFilteredLabel={this.addFilteredLabel} />
+          </Col>
+          <Col xs={8} className="bg-dark">
+            <FormMain />
+            <ListNotes filteredLabels={filteredLabels} />
+          </Col>
+        </Row>
+      </div>
+    );
+  }
 }
 
 export default App;
